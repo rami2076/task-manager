@@ -1,0 +1,1456 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task Board | タスク管理ツール</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f3f6fb;
+      --panel: #ffffff;
+      --panel-soft: rgba(255, 255, 255, 0.72);
+      --text: #172033;
+      --muted: #66708a;
+      --line: #dfe4f0;
+      --accent: #4a63ff;
+      --accent-soft: rgba(74, 99, 255, 0.12);
+      --ok: #11985b;
+      --warn: #e4950d;
+      --bad: #d73352;
+      --shadow: rgba(24, 33, 56, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #12161f;
+        --panel: #1b202c;
+        --panel-soft: rgba(27, 32, 44, 0.82);
+        --text: #eef2ff;
+        --muted: #99a4bd;
+        --line: #2e3546;
+        --accent: #7d92ff;
+        --accent-soft: rgba(125, 146, 255, 0.16);
+        --ok: #41d18f;
+        --warn: #ffc14d;
+        --bad: #ff7292;
+        --shadow: rgba(0, 0, 0, 0.28);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic Pro W3", "Hiragino Kaku Gothic", "Yu Gothic UI", Meiryo, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(122, 143, 255, 0.26), transparent 34rem),
+        linear-gradient(135deg, var(--bg), #dfe7fb 52%, #e9f5ff);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button,
+    [type="button"] {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 10px;
+      padding: 8px 12px;
+      min-height: 36px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px var(--shadow);
+    }
+
+    input,
+    select,
+    textarea {
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 10px;
+      padding: 9px 10px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 22px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #7f4cff);
+      box-shadow: 0 12px 26px rgba(74, 99, 255, 0.24);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .actions input,
+    .actions select {
+      min-width: 130px;
+    }
+
+    .search {
+      width: min(260px, 100%);
+    }
+
+    .primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 10px;
+      padding: 14px 20px 8px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 4px;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stat strong {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .quickadd {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) 160px auto;
+      gap: 8px;
+      padding: 8px 20px 16px;
+    }
+
+    .quickadd input {
+      min-height: 40px;
+      font-size: 15px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(275px, 1fr));
+      gap: 14px;
+      padding: 6px 20px 24px;
+      align-items: start;
+    }
+
+    .column {
+      background: rgba(255, 255, 255, 0.46);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 14px 30px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .column {
+        background: rgba(35, 41, 55, 0.72);
+      }
+    }
+
+    .column-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .column-header h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .count {
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--text);
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .dropzone {
+      flex: 1;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dropzone.drag-over {
+      outline: 2px dashed var(--accent);
+      outline-offset: -8px;
+      background: var(--accent-soft);
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 18px var(--shadow);
+      cursor: grab;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px var(--shadow);
+    }
+
+    .card.dragging {
+      opacity: 0.45;
+    }
+
+    .card.priority-urgent { border-left-color: var(--bad); }
+    .card.priority-high { border-left-color: var(--warn); }
+    .card.priority-medium { border-left-color: var(--accent); }
+    .card.priority-low { border-left-color: var(--muted); }
+
+    .card {
+      border-left: 5px solid var(--line);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge-urgent { background: rgba(215, 51, 82, 0.13); color: var(--bad); border-color: rgba(215, 51, 82, 0.28); }
+    .badge-high { background: rgba(228, 149, 13, 0.15); color: var(--warn); border-color: rgba(228, 149, 13, 0.28); }
+    .badge-medium { background: var(--accent-soft); color: var(--accent); border-color: rgba(74, 99, 255, 0.22); }
+    .badge-low { background: rgba(102, 112, 138, 0.14); color: var(--muted); border-color: rgba(102, 112, 138, 0.24); }
+
+    .card-icons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .icon-btn {
+      min-width: 30px;
+      min-height: 30px;
+      padding: 0 7px;
+      border-radius: 9px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .card h3 {
+      margin: 9px 0 0;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow-wrap: break-word;
+    }
+
+    .card p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      overflow-wrap: break-word;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      border-radius: 999px;
+      background: rgba(23, 32, 51, 0.06);
+      color: var(--muted);
+      padding: 3px 7px;
+      font-size: 12px;
+      overflow-wrap: break-word;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .meta span {
+        background: rgba(238, 242, 255, 0.08);
+      }
+    }
+
+    .overdue {
+      color: var(--bad) !important;
+      font-weight: 800;
+    }
+
+    .move {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    .move span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mini {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 0 7px;
+      border-radius: 9px;
+    }
+
+    .footer {
+      margin-top: auto;
+      padding: 14px 20px 18px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: rgba(7, 10, 16, 0.58);
+      backdrop-filter: blur(6px);
+    }
+
+    .modal {
+      width: min(680px, 100%);
+      max-height: min(92vh, 920px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-grid label,
+    .full {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .full {
+      margin-top: 10px;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .danger {
+      border-color: rgba(215, 51, 82, 0.36);
+      color: var(--bad);
+      margin-right: auto;
+    }
+
+    .hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .empty {
+      padding: 26px 12px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+    }
+
+    @media (max-width: 1080px) {
+      .board {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 18px;
+      }
+
+      .column {
+        min-width: 300px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar,
+      .stats,
+      .quickadd,
+      .board,
+      .footer {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .brand {
+        min-width: 100%;
+      }
+
+      .actions {
+        width: 100%;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .quickadd {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .column {
+        min-width: 278px;
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">T</div>
+        <div>
+          <h1>Task Board</h1>
+          <p>ローカル保存対応のボード型タスク管理</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <input id="search" class="search" type="search" placeholder="検索: 件名/説明/担当/タグ">
+        <select id="statusFilter" title="状態フィルター">
+          <option value="all">全状態</option>
+        </select>
+        <select id="priorityFilter" title="優先度フィルター">
+          <option value="all">全優先度</option>
+        </select>
+        <select id="categoryFilter" title="カテゴリフィルター">
+          <option value="all">全カテゴリ</option>
+        </select>
+        <select id="sortBy" title="並び替">
+          <option value="updated-desc">更新順</option>
+          <option value="created-desc">作成が新順</option>
+          <option value="created-asc">作成が古順</option>
+          <option value="due-asc">締切が近順</option>
+          <option value="due-desc">締切が遠順</option>
+          <option value="priority">優先度順</option>
+        </select>
+        <button id="newBtn" class="primary">新規タスク</button>
+        <button id="exportBtn">JSON出力</button>
+        <button id="importBtn">JSON読込</button>
+        <input id="importFile" type="file" accept="application/json,.json" hidden>
+      </div>
+    </header>
+
+    <section id="stats" class="stats"></section>
+
+    <section class="quickadd">
+      <input id="quickInput" placeholder="Enterで追加。例: ログイン画面のUI調整 @tanaka !高 #ui due:2026-10-01">
+      <select id="quickStatus" title="追加先"></select>
+      <button id="quickAddBtn" class="primary">追加</button>
+    </section>
+
+    <main id="board" class="board"></main>
+
+    <footer class="footer">
+      <div class="footer-row">
+        <div>データはこのブラウザの localStorage に保存されます。</div>
+        <div>
+          <button id="restoreSampleBtn">サンプル戻す</button>
+          <button id="clearBtn">全消去</button>
+        </div>
+      </div>
+      <p class="hint">
+        クイック追加: `@担当 !優先度 #タグ due:YYYY-MM-DD` を認識します。
+        優先度は `緊急 / 高 / 中 / 低` または `urgent / high / medium / low` などが使えます。
+      </p>
+    </footer>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" hidden>
+    <form id="taskForm" class="modal">
+      <div class="modal-head">
+        <h2 id="modalTitle">タスクを追加</h2>
+        <button type="button" id="closeModalBtn" class="icon-btn">×</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="full">
+          タイトル *
+          <input name="title" required placeholder="例: 認証バグを直す">
+        </label>
+        <label>
+          状態
+          <select name="status" id="modalStatus"></select>
+        </label>
+        <label>
+          優先度
+          <select name="priority" id="modalPriority"></select>
+        </label>
+        <label>
+          締切
+          <input name="due" type="date">
+        </label>
+        <label>
+          担当者
+          <input name="assignee" placeholder="例: tanaka">
+        </label>
+        <label>
+          カテゴリ
+          <input name="category" placeholder="例: frontend">
+        </label>
+        <label>
+          タグ
+          <input name="tags" placeholder="例: ui, bug, urgent">
+        </label>
+      </div>
+
+      <label class="full">
+        説明
+        <textarea name="description" placeholder="実施内容、受け入れ条件、リンクなど"></textarea>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" id="deleteTaskBtn" class="danger" hidden>削除</button>
+        <button type="button" id="cancelBtn">中止</button>
+        <button type="submit" class="primary">保存</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const LS_KEY = 'task-board.v1';
+    const EMPTY_DATE = '';
+
+    const COLUMNS = [
+      { id: 'todo', label: '未着手' },
+      { id: 'doing', label: '対応中' },
+      { id: 'review', label: 'レビュー待ち' },
+      { id: 'done', label: '完了' }
+    ];
+
+    const PRIORITIES = [
+      { id: 'urgent', label: '緊急', weight: 0 },
+      { id: 'high', label: '高', weight: 1 },
+      { id: 'medium', label: '中', weight: 2 },
+      { id: 'low', label: '低', weight: 3 }
+    ];
+
+    const PRIORITY_MAP = Object.fromEntries(PRIORITIES.map((p) => [p.id, p]));
+    const COLUMN_MAP = Object.fromEntries(COLUMNS.map((c) => [c.id, c]));
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const refs = {
+      search: $('#search'),
+      statusFilter: $('#statusFilter'),
+      priorityFilter: $('#priorityFilter'),
+      categoryFilter: $('#categoryFilter'),
+      sortBy: $('#sortBy'),
+      stats: $('#stats'),
+      board: $('#board'),
+      quickInput: $('#quickInput'),
+      quickStatus: $('#quickStatus'),
+      quickAddBtn: $('#quickAddBtn'),
+      newBtn: $('#newBtn'),
+      exportBtn: $('#exportBtn'),
+      importBtn: $('#importBtn'),
+      importFile: $('#importFile'),
+      restoreSampleBtn: $('#restoreSampleBtn'),
+      clearBtn: $('#clearBtn'),
+      modalBackdrop: $('#modalBackdrop'),
+      modalTitle: $('#modalTitle'),
+      closeModalBtn: $('#closeModalBtn'),
+      cancelBtn: $('#cancelBtn'),
+      taskForm: $('#taskForm'),
+      modalStatus: $('#modalStatus'),
+      modalPriority: $('#modalPriority'),
+      deleteTaskBtn: $('#deleteTaskBtn')
+    };
+
+    const state = {
+      tasks: [],
+      filters: {
+        search: '',
+        status: 'all',
+        priority: 'all',
+        category: 'all',
+        sort: 'updated-desc'
+      },
+      editingId: null,
+      draggedId: null
+    };
+
+    function uid() {
+      return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function todayString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function dateAfter(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
+    }
+
+    function normalizeTags(value) {
+      const raw = Array.isArray(value) ? value : String(value ?? '');
+      return raw
+        .toString()
+        .split(/[,\s]+/)
+        .map((s) => s.replace(/^#+/, '').trim())
+        .filter(Boolean);
+    }
+
+    function normalizePriority(value) {
+      const raw = String(value ?? '')
+        .trim()
+        .toLowerCase()
+        .replace(/[!@#$%^&*()+;:;<=>?。、／\\~｜`〔〕「」『』【】]/g, '');
+
+      if (!raw) return 'medium';
+
+      if (['1', 'p1', 'urgent', 'critical', 'max', 'せきとう', '緊急', '高優先', '最優先'].includes(raw)) return 'urgent';
+      if (['2', 'high', 'h', 'たか', '高', '重要', '優先'].includes(raw)) return 'high';
+      if (['3', 'medium', 'mid', 'm', 'なか', '中', '通常', '普通'].includes(raw)) return 'medium';
+      if (['4', 'low', 'l', 'ひく', '低', '低め'].includes(raw)) return 'low';
+      if (PRIORITY_MAP[raw]) return raw;
+
+      return 'medium';
+    }
+
+    function normalizeTask(input) {
+      if (!input || typeof input !== 'object') return null;
+
+      const title = String(input.title ?? '').trim();
+      if (!title) return null;
+
+      const createdAt = String(input.createdAt ?? new Date().toISOString());
+      const updatedAt = String(input.updatedAt ?? createdAt);
+
+      return {
+        id: String(input.id ?? uid()),
+        title,
+        description: String(input.description ?? '').trim(),
+        status: COLUMN_MAP[input.status] ? input.status : 'todo',
+        priority: normalizePriority(input.priority),
+        assignee: String(input.assignee ?? '').replace(/^@/, '').trim(),
+        due: normalizeDateString(input.due),
+        category: String(input.category ?? '').replace(/^#/, '').trim(),
+        tags: normalizeTags(input.tags),
+        createdAt,
+        updatedAt
+      };
+    }
+
+    function normalizeDateString(value) {
+      const s = String(value ?? '').trim();
+      if (!s) return EMPTY_DATE;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+      return EMPTY_DATE;
+    }
+
+    function seedTasks() {
+      const base = new Date().toISOString();
+      return [
+        {
+          id: uid(),
+          title: 'Task Board を使う',
+          description: 'ドラッグ＆ドロップ、検索、締切、優先度、ローカル保存を確かめます。',
+          status: 'todo',
+          priority: 'medium',
+          assignee: 'あなた',
+          due: dateAfter(3),
+          category: 'intro',
+          tags: ['kanban', 'local'],
+          createdAt: base,
+          updatedAt: base
+        },
+        {
+          id: uid(),
+          title: 'ログインUIを整える',
+          description: 'エラー表示とバリデーションを分かりやすくする。',
+          status: 'doing',
+          priority: 'high',
+          assignee: 'tanaka',
+          due: dateAfter(1),
+          category: 'frontend',
+          tags: ['ui', 'validation'],
+          createdAt: base,
+          updatedAt: base
+        },
+        {
+          id: uid(),
+          title: '締切タスクを直す',
+          description: '過ぎた締切は赤字で強調表示されます。',
+          status: 'doing',
+          priority: 'urgent',
+          assignee: 'sato',
+          due: dateAfter(-1),
+          category: 'ops',
+          tags: ['deadline'],
+          createdAt: base,
+          updatedAt: base
+        },
+        {
+          id: uid(),
+          title: 'レビューコメントを確認する',
+          description: 'レビュー待ちタスクはカード下部に表示します。',
+          status: 'review',
+          priority: 'low',
+          assignee: 'kimura',
+          due: dateAfter(7),
+          category: 'review',
+          tags: [],
+          createdAt: base,
+          updatedAt: base
+        },
+        {
+          id: uid(),
+          title: '公開用の資料を読みやすくする',
+          description: 'このサンプルタスクは完了欄に表示されます。',
+          status: 'done',
+          priority: 'medium',
+          assignee: 'you',
+          due: EMPTY_DATE,
+          category: 'docs',
+          tags: ['done'],
+          createdAt: base,
+          updatedAt: base
+        }
+      ].map(normalizeTask).filter(Boolean);
+    }
+
+    function loadTasks() {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return seedTasks();
+        const parsed = JSON.parse(raw);
+        const tasks = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.tasks) ? parsed.tasks : null;
+        if (!tasks) return seedTasks();
+        const normalized = tasks.map(normalizeTask).filter(Boolean);
+        return normalized.length ? normalized : seedTasks();
+      } catch {
+        return seedTasks();
+      }
+    }
+
+    function saveTasks() {
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(state.tasks, null, 2));
+      } catch (error) {
+        console.error('保存に失敗しました', error);
+        alert('ローカル保存に失敗しました。JSON出力でバックアップしてください。');
+      }
+    }
+
+    function parseQuickText(text, defaultStatus) {
+      const raw = String(text ?? '').trim();
+      if (!raw) return null;
+
+      let assignee = '';
+      let priority = 'medium';
+      let due = EMPTY_DATE;
+      const tags = [];
+      const titleParts = [];
+
+      for (const part of raw.split(/\s+/)) {
+        if (part.startsWith('#')) {
+          const tag = part.slice(1).trim();
+          if (tag) tags.push(tag);
+          continue;
+        }
+
+        if (part.startsWith('@')) {
+          assignee = part.slice(1).replace(/[,;。]+$/, '').trim();
+          continue;
+        }
+
+        if (part.startsWith('!')) {
+          priority = normalizePriority(part.slice(1));
+          continue;
+        }
+
+        const dueMatch = part.match(/^due[:：](.+)$/i);
+        if (dueMatch) {
+          const parsed = normalizeDateString(dueMatch[1]);
+          if (parsed) {
+            due = parsed;
+            continue;
+          }
+        }
+
+        titleParts.push(part);
+      }
+
+      return normalizeTask({
+        title: titleParts.join(' ').trim() || '無題タスク',
+        status: COLUMN_MAP[defaultStatus] ? defaultStatus : 'todo',
+        priority,
+        assignee,
+        due,
+        tags
+      });
+    }
+
+    function isOverdue(task) {
+      return Boolean(task.due) && task.status !== 'done' && task.due < todayString();
+    }
+
+    function compareTasks(a, b) {
+      const sort = state.filters.sort;
+
+      if (sort === 'priority') {
+        const delta = PRIORITY_MAP[a.priority].weight - PRIORITY_MAP[b.priority].weight;
+        if (delta !== 0) return delta;
+        return (a.due || '9999-12-31').localeCompare(b.due || '9999-12-31');
+      }
+
+      if (sort === 'due-asc') {
+      const delta = (a.due || '9999-12-31').localeCompare(b.due || '9999-12-31');
+        return delta !== 0 ? delta : PRIORITY_MAP[a.priority].weight - PRIORITY_MAP[b.priority].weight;
+      }
+
+      if (sort === 'due-desc') {
+      const delta = (b.due || '0000-01-01').localeCompare(a.due || '0000-01-01');
+        return delta !== 0 ? delta : PRIORITY_MAP[a.priority].weight - PRIORITY_MAP[b.priority].weight;
+      }
+
+      if (sort === 'created-desc') {
+        return b.createdAt.localeCompare(a.createdAt);
+      }
+
+      if (sort === 'created-asc') {
+        return a.createdAt.localeCompare(b.createdAt);
+      }
+
+      return b.updatedAt.localeCompare(a.updatedAt);
+    }
+
+    function filteredTasks() {
+      const q = state.filters.search.trim().toLowerCase();
+
+      return state.tasks
+        .filter((task) => {
+          if (state.filters.status !== 'all' && task.status !== state.filters.status) return false;
+          if (state.filters.priority !== 'all' && task.priority !== state.filters.priority) return false;
+          if (state.filters.category !== 'all' && task.category !== state.filters.category) return false;
+
+          if (q) {
+            const haystack = [
+              task.title,
+              task.description,
+              task.assignee,
+              task.category,
+              task.due,
+              ...task.tags
+            ].join(' ').toLowerCase();
+
+            if (!haystack.includes(q)) return false;
+          }
+
+          return true;
+        })
+        .sort(compareTasks);
+    }
+
+    function renderStats() {
+      const total = state.tasks.length;
+      const done = state.tasks.filter((t) => t.status === 'done').length;
+      const doing = state.tasks.filter((t) => t.status === 'doing').length;
+      const review = state.tasks.filter((t) => t.status === 'review').length;
+      const overdue = state.tasks.filter(isOverdue).length;
+      const percent = total ? Math.round((done / total) * 100) : 0;
+
+      refs.stats.innerHTML = [
+        statCard('総タスク', total),
+        statCard('完了', `${done} (${percent}%)`),
+        statCard('対応中', doing),
+        statCard('レビュー待ち', review),
+        statCard('締切過', overdue)
+      ].join('');
+    }
+
+    function statCard(label, value) {
+      return `<div class="stat"><span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong></div>`;
+    }
+
+    function populateSelects() {
+      const statusOptions = COLUMNS.map((c) => `<option value="${c.id}">${escapeHtml(c.label)}</option>`).join('');
+      const priorityOptions = PRIORITIES.map((p) => `<option value="${p.id}">${escapeHtml(p.label)}</option>`).join('');
+
+      refs.statusFilter.innerHTML = '<option value="all">全状態</option>' + statusOptions;
+      refs.quickStatus.innerHTML = statusOptions;
+      refs.modalStatus.innerHTML = statusOptions;
+      refs.priorityFilter.innerHTML = '<option value="all">全優先度</option>' + priorityOptions;
+      refs.modalPriority.innerHTML = priorityOptions;
+
+      refs.quickStatus.value = 'todo';
+    }
+
+    function renderCategoryFilter() {
+      const categories = [...new Set(state.tasks.map((t) => t.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ja'));
+      const selected = state.filters.category;
+      if (selected !== 'all' && !categories.includes(selected)) {
+        state.filters.category = 'all';
+      }
+
+      refs.categoryFilter.innerHTML =
+        '<option value="all">全カテゴリ</option>' +
+        categories.map((c) => `<option value="${escapeHtml(c)}" ${state.filters.category === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('');
+    }
+
+    function renderCard(task) {
+      const column = COLUMN_MAP[task.status] || COLUMNS[0];
+      const priority = PRIORITY_MAP[task.priority] || PRIORITY_MAP.medium;
+      const overdueClass = isOverdue(task) ? ' overdue' : '';
+      const tagHtml = task.tags.map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('');
+
+      return `
+        <article class="card priority-${task.priority}" draggable="true" data-id="${escapeHtml(task.id)}">
+          <div class="card-head">
+            <span class="badge badge-${task.priority}">${escapeHtml(priority.label)}</span>
+            <div class="card-icons">
+              <button type="button" class="icon-btn" data-action="toggle-done" title="完了/未完了を切替">✓</button>
+              <button type="button" class="icon-btn" data-action="edit" title="編集">✎</button>
+              <button type="button" class="icon-btn" data-action="delete" title="削除">×</button>
+            </div>
+          </div>
+          <h3>${escapeHtml(task.title)}</h3>
+          ${task.description ? `<p>${escapeHtml(task.description)}</p>` : ''}
+          <div class="meta">
+            ${task.due ? `<span class="${overdueClass.trim()}">締切 ${escapeHtml(task.due)}</span>` : ''}
+            ${task.assignee ? `<span>@${escapeHtml(task.assignee)}</span>` : ''}
+            ${task.category ? `<span>#${escapeHtml(task.category)}</span>` : ''}
+            ${tagHtml}
+          </div>
+          <div class="move">
+            <button type="button" class="mini" data-action="move-left" title="左へ移動">←</button>
+            <span>${escapeHtml(column.label)}</span>
+            <button type="button" class="mini" data-action="move-right" title="右へ移動">→</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderBoard() {
+      const filtered = filteredTasks();
+      const visibleColumns = state.filters.status === 'all' ? COLUMNS : COLUMNS.filter((c) => c.id === state.filters.status);
+
+      refs.board.innerHTML = visibleColumns.map((column) => {
+        const items = filtered.filter((task) => task.status === column.id);
+        const cards = items.length ? items.map(renderCard).join('') : '<div class="empty">タスクなし</div>';
+
+        return `
+          <section class="column">
+            <div class="column-header">
+              <h2>${escapeHtml(column.label)}</h2>
+              <span class="count">${items.length}</span>
+            </div>
+            <div class="dropzone" data-status="${column.id}">
+              ${cards}
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function render() {
+      renderStats();
+      renderCategoryFilter();
+      renderBoard();
+    }
+
+    function addTask(taskOrRaw) {
+      const task = taskOrRaw && taskOrRaw.id ? taskOrRaw : normalizeTask(taskOrRaw);
+      if (!task) return;
+
+      state.tasks.unshift(task);
+      saveTasks();
+      render();
+    }
+
+    function updateTask(id, patch) {
+      const task = state.tasks.find((t) => t.id === id);
+      if (!task) return;
+
+      Object.assign(task, patch);
+      task.updatedAt = new Date().toISOString();
+      saveTasks();
+      render();
+    }
+
+    function deleteTask(id) {
+      const task = state.tasks.find((t) => t.id === id);
+      if (!task) return;
+      if (!confirm(`「${task.title}」を削除します。`)) return;
+
+      state.tasks = state.tasks.filter((t) => t.id !== id);
+      saveTasks();
+      render();
+    }
+
+    function moveTask(id, delta) {
+      const task = state.tasks.find((t) => t.id === id);
+      if (!task) return;
+
+      const index = COLUMNS.findIndex((c) => c.id === task.status);
+      const nextIndex = Math.max(0, Math.min(COLUMNS.length - 1, index + delta));
+      updateTask(id, { status: COLUMNS[nextIndex].id });
+    }
+
+    function toggleDone(id) {
+      const task = state.tasks.find((t) => t.id === id);
+      if (!task) return;
+
+      updateTask(id, {
+        status: task.status === 'done' ? 'todo' : 'done'
+      });
+    }
+
+    function openModal(id = null) {
+      state.editingId = id;
+      refs.taskForm.reset();
+
+      const task = id ? state.tasks.find((t) => t.id === id) : null;
+      refs.modalTitle.textContent = task ? 'タスクを編集' : 'タスクを追加';
+      refs.deleteTaskBtn.hidden = !task;
+
+      refs.modalStatus.value = task?.status || refs.quickStatus.value || 'todo';
+      refs.modalPriority.value = task?.priority || 'medium';
+
+      const e = refs.taskForm.elements;
+      if (task) {
+        e.title.value = task.title;
+        e.description.value = task.description;
+        e.due.value = task.due || '';
+        e.assignee.value = task.assignee;
+        e.category.value = task.category;
+        e.tags.value = task.tags.join(', ');
+      }
+
+      refs.modalBackdrop.hidden = false;
+      setTimeout(() => e.title.focus(), 0);
+    }
+
+    function closeModal() {
+      refs.modalBackdrop.hidden = true;
+      state.editingId = null;
+    }
+
+    function submitTaskForm(event) {
+      event.preventDefault();
+
+      const e = refs.taskForm.elements;
+      const title = String(e.title.value ?? '').trim();
+      if (!title) {
+        e.title.focus();
+        return;
+      }
+
+      const data = {
+        title,
+        description: String(e.description.value ?? '').trim(),
+        status: String(e.status.value ?? 'todo'),
+        priority: String(e.priority.value ?? 'medium'),
+        due: String(e.due.value ?? '').trim(),
+        assignee: String(e.assignee.value ?? '').trim(),
+        category: String(e.category.value ?? '').trim(),
+        tags: String(e.tags.value ?? '').trim()
+      };
+
+      if (state.editingId) {
+        updateTask(state.editingId, {
+          ...data,
+          tags: normalizeTags(data.tags),
+          due: normalizeDateString(data.due)
+        });
+      } else {
+        addTask(data);
+      }
+
+      closeModal();
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(state.tasks, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `tasks-${todayString()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function importJsonFile(file) {
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(String(reader.result ?? ''));
+          const tasks = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.tasks) ? parsed.tasks : null;
+          if (!tasks) throw new Error('tasks array not found');
+
+          const normalized = tasks.map(normalizeTask).filter(Boolean);
+          if (!normalized.length) throw new Error('no valid tasks');
+
+          state.tasks = normalized;
+          saveTasks();
+          render();
+          alert(`${normalized.length}件のタスクを読み込みました。`);
+        } catch (error) {
+          console.error('import failed', error);
+          alert('JSONの読み込みに失敗しました。形式を確認してください。');
+        } finally {
+          refs.importFile.value = '';
+        }
+      };
+      reader.onerror = () => {
+        alert('ファイルの読み込みに失敗しました。');
+        refs.importFile.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function restoreSample() {
+      if (!confirm('現在のタスクをサンプルに戻します。よろしいですか？')) return;
+      state.tasks = seedTasks();
+      saveTasks();
+      render();
+    }
+
+    function clearAll() {
+      if (!confirm('全タスクを削除します。よろしいですか？')) return;
+      state.tasks = [];
+      saveTasks();
+      render();
+    }
+
+    function attachListeners() {
+      refs.search.addEventListener('input', (event) => {
+        state.filters.search = event.target.value;
+        render();
+      });
+
+      refs.statusFilter.addEventListener('change', (event) => {
+        state.filters.status = event.target.value;
+        render();
+      });
+
+      refs.priorityFilter.addEventListener('change', (event) => {
+        state.filters.priority = event.target.value;
+        render();
+      });
+
+      refs.categoryFilter.addEventListener('change', (event) => {
+        state.filters.category = event.target.value;
+        render();
+      });
+
+      refs.sortBy.addEventListener('change', (event) => {
+        state.filters.sort = event.target.value;
+        render();
+      });
+
+      refs.newBtn.addEventListener('click', () => openModal());
+      refs.closeModalBtn.addEventListener('click', closeModal);
+      refs.cancelBtn.addEventListener('click', closeModal);
+      refs.deleteTaskBtn.addEventListener('click', () => {
+        if (state.editingId) {
+          closeModal();
+          deleteTask(state.editingId);
+        }
+      });
+      refs.taskForm.addEventListener('submit', submitTaskForm);
+
+      refs.quickAddBtn.addEventListener('click', () => {
+        const task = parseQuickText(refs.quickInput.value, refs.quickStatus.value);
+        if (!task) return;
+        addTask(task);
+        refs.quickInput.value = '';
+        refs.quickInput.focus();
+      });
+
+      refs.quickInput.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        refs.quickAddBtn.click();
+      });
+
+      refs.exportBtn.addEventListener('click', exportJson);
+      refs.importBtn.addEventListener('click', () => refs.importFile.click());
+      refs.importFile.addEventListener('change', (event) => importJsonFile(event.target.files?.[0]));
+      refs.restoreSampleBtn.addEventListener('click', restoreSample);
+      refs.clearBtn.addEventListener('click', clearAll);
+
+      refs.modalBackdrop.addEventListener('click', (event) => {
+        if (event.target === refs.modalBackdrop) closeModal();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !refs.modalBackdrop.hidden) closeModal();
+      });
+
+      refs.board.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-action]');
+        if (!button) return;
+
+        const card = button.closest('.card');
+        if (!card) return;
+
+        const id = card.dataset.id;
+        const action = button.dataset.action;
+
+        if (action === 'edit') openModal(id);
+        if (action === 'delete') deleteTask(id);
+        if (action === 'toggle-done') toggleDone(id);
+        if (action === 'move-left') moveTask(id, -1);
+        if (action === 'move-right') moveTask(id, 1);
+      });
+
+      refs.board.addEventListener('dblclick', (event) => {
+        const card = event.target.closest('.card');
+        const button = event.target.closest('button');
+        if (card && !button) openModal(card.dataset.id);
+      });
+
+      refs.board.addEventListener('dragstart', (event) => {
+        const card = event.target.closest('.card');
+        if (!card) return;
+
+        state.draggedId = card.dataset.id;
+        card.classList.add('dragging');
+
+        if (event.dataTransfer) {
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.dropEffect = 'move';
+          event.dataTransfer.setData('text/plain', card.dataset.id);
+        }
+      });
+
+      refs.board.addEventListener('dragend', (event) => {
+        const card = event.target.closest('.card');
+        if (card) card.classList.remove('dragging');
+        state.draggedId = null;
+      });
+
+      refs.board.addEventListener('dragover', (event) => {
+        const dropzone = event.target.closest('.dropzone');
+        if (!dropzone || !state.draggedId) return;
+
+        event.preventDefault();
+
+        if (event.dataTransfer) {
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.dropEffect = 'move';
+        }
+
+        dropzone.classList.add('drag-over');
+      });
+
+      refs.board.addEventListener('dragleave', (event) => {
+        const dropzone = event.target.closest('.dropzone');
+        if (!dropzone) return;
+
+        const related = event.relatedTarget;
+        if (!related || !dropzone.contains(related)) {
+          dropzone.classList.remove('drag-over');
+        }
+      });
+
+      refs.board.addEventListener('drop', (event) => {
+        const dropzone = event.target.closest('.dropzone');
+        if (!dropzone || !state.draggedId) return;
+
+        event.preventDefault();
+        const status = dropzone.dataset.status;
+
+        updateTask(state.draggedId, { status });
+        document.querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
+        state.draggedId = null;
+      });
+    }
+
+    function init() {
+      populateSelects();
+      state.tasks = loadTasks();
+      attachListeners();
+      render();
+    }
+
+    init();
+  </script>
+</body>
+</html>

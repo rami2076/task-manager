@@ -1,0 +1,28 @@
+{
+  "name": "@rami2076/task-manager",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Single-file board-style task manager with local storage support",
+  "license": "MIT",
+  "author": "rami2076",
+  "homepage": "https://github.com/rami2076/task-manager#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh:git@github.com:rami2076/task-manager.git"
+  },
+  "scripts": {
+    "start": "node serve.mjs",
+    "dev": "node serve.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "task-manager",
+    "kanban",
+    "todo",
+    "local-first",
+    "single-file"
+  ]
+}
