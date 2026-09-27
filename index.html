@@ -204,7 +204,7 @@
 
     .quickadd {
       display: grid;
-      grid-template-columns: minmax(280px, 1fr) 160px auto;
+      grid-template-columns: minmax(280px, 1fr) 160px 150px auto;
       gap: 8px;
       padding: 8px 20px 16px;
     }
@@ -361,6 +361,20 @@
       margin-top: 10px;
     }
 
+    .meta .lane-tag {
+      gap: 6px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .meta .lane-tag .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
     .meta span {
       display: inline-flex;
       align-items: center;
@@ -405,6 +419,258 @@
       min-height: 30px;
       padding: 0 7px;
       border-radius: 9px;
+    }
+
+    .projectbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 8px 20px 4px;
+    }
+
+    .project-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .project-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      min-height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .project-chip .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
+
+    .project-chip .count {
+      background: rgba(23, 32, 51, 0.08);
+      color: var(--muted);
+      padding: 2px 7px;
+      font-size: 11px;
+      border-radius: 999px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .project-chip .count {
+        background: rgba(238, 242, 255, 0.1);
+      }
+    }
+
+    .project-chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    .dot-blue { background: #4a63ff !important; }
+    .dot-green { background: #17a568 !important; }
+    .dot-purple { background: #9841e6 !important; }
+    .dot-orange { background: #e4950d !important; }
+    .dot-red { background: #d73352 !important; }
+    .dot-teal { background: #14a1b3 !important; }
+    .dot-pink { background: #e54b93 !important; }
+    .dot-gray { background: #7a8aa3 !important; }
+
+    .projectbar-tools {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .projectbar-tools input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+    }
+
+    .projectbar-tools label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .lanes {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 6px 20px 24px;
+    }
+
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-soft);
+      box-shadow: 0 14px 30px var(--shadow);
+      overflow: hidden;
+    }
+
+    .lane-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: linear-gradient(90deg, var(--accent-soft), transparent 62%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .lane.collapsed .lane-head {
+      border-bottom-color: transparent;
+    }
+
+    .lane-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .lane-head .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      background: var(--accent);
+    }
+
+    .lane-head .count {
+      background: rgba(23, 32, 51, 0.08);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .lane-head .count {
+        background: rgba(238, 242, 255, 0.1);
+      }
+    }
+
+    .lane-mini-stats {
+      display: inline-flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .lane-mini-stats strong {
+      color: var(--text);
+    }
+
+    .lane-actions {
+      margin-left: auto;
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .collapse-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      padding: 0;
+      line-height: 1;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .lane-body {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(245px, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+
+    .lane.collapsed .lane-body {
+      display: none;
+    }
+
+    .lane .column {
+      min-height: 260px;
+      box-shadow: none;
+    }
+
+    .lane-empty {
+      grid-column: 1 / -1;
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .project-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto auto auto auto;
+      gap: 6px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-soft);
+    }
+
+    .project-row input[type="text"] {
+      min-width: 0;
+    }
+
+    .project-row select {
+      min-width: 96px;
+    }
+
+    .project-row.is-active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .new-project-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 1080px) {
+      .lane-body {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 14px;
+      }
+
+      .lane-body .column {
+        min-width: 275px;
+      }
+
+      .lane-empty {
+        width: 100%;
+      }
     }
 
     .footer {
@@ -529,9 +795,19 @@
       .stats,
       .quickadd,
       .board,
+      .lanes,
+      .projectbar,
       .footer {
         padding-left: 12px;
         padding-right: 12px;
+      }
+
+      .lane-actions {
+        gap: 4px;
+      }
+
+      .lane-mini-stats {
+        display: none;
       }
 
       .brand {
@@ -598,15 +874,35 @@
       </div>
     </header>
 
+    <nav class="projectbar" aria-label="プロジェクト">
+      <div id="projectTabs" class="project-tabs"></div>
+      <div class="projectbar-tools">
+        <label>
+          <input id="hideEmptyProjects" type="checkbox">
+          空プロジェクトを隠す
+        </label>
+        <select id="projectSort" title="プロジェクトの並び順">
+          <option value="manual">手動</option>
+          <option value="name">名前順</option>
+          <option value="count-desc">件数順</option>
+        </select>
+        <button id="expandAllBtn">全展開</button>
+        <button id="collapseAllBtn">全収納</button>
+        <button id="manageProjectsBtn">プロジェクト管理</button>
+      </div>
+    </nav>
+
     <section id="stats" class="stats"></section>
 
     <section class="quickadd">
-      <input id="quickInput" placeholder="Enterで追加。例: ログイン画面のUI調整 @tanaka !高 #ui due:2026-10-01">
+      <input id="quickInput" placeholder="Enterで追加。例: ログイン画面のUI調整 @tanaka !高 #ui due:2026-10-01 proj:Webアプリ">
+      <select id="quickProject" title="追加先プロジェクト"></select>
       <select id="quickStatus" title="追加先"></select>
       <button id="quickAddBtn" class="primary">追加</button>
     </section>
 
-    <main id="board" class="board"></main>
+    <main id="board" class="board" hidden></main>
+    <main id="lanes" class="lanes"></main>
 
     <footer class="footer">
       <div class="footer-row">
@@ -619,6 +915,8 @@
       <p class="hint">
         クイック追加: `@担当 !優先度 #タグ due:YYYY-MM-DD` を認識します。
         優先度は `緊急 / 高 / 中 / 低` または `urgent / high / medium / low` などが使えます。
+        プロジェクト指定は `proj:プロジェクト名`。既存名前はそのまま、新規名前は自動作成します。
+        レーン間でカードをドラッグするとプロジェクトも移動します。
       </p>
     </footer>
   </div>
@@ -656,6 +954,10 @@
           <input name="category" placeholder="例: frontend">
         </label>
         <label>
+          プロジェクト
+          <select name="project" id="modalProject"></select>
+        </label>
+        <label>
           タグ
           <input name="tags" placeholder="例: ui, bug, urgent">
         </label>
@@ -674,9 +976,44 @@
     </form>
   </div>
 
+  <div id="projectModalBackdrop" class="modal-backdrop" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h2>プロジェクト管理</h2>
+        <button type="button" id="closeProjectModalBtn" class="icon-btn">×</button>
+      </div>
+      <p class="hint">
+        名前や色は即座に反映されます。▲▼で表示順を変更できます。
+        削除するプロジェクトのタスクは別のプロジェクトに移動します。
+      </p>
+      <div id="projectList" class="project-list"></div>
+      <div class="new-project-row">
+        <input id="newProjectInput" type="text" placeholder="新しいプロジェクト名">
+        <select id="newProjectColor" title="色">
+          <option value="blue">青</option>
+          <option value="green">緑</option>
+          <option value="purple">紫</option>
+          <option value="orange">橙</option>
+          <option value="red">赤</option>
+          <option value="teal">ティール</option>
+          <option value="pink">ピンク</option>
+          <option value="gray">グレイ</option>
+        </select>
+        <button id="addProjectBtn" class="primary">追加</button>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="closeProjectModalOkBtn" class="primary">閉じる</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const LS_KEY = 'task-board.v1';
+    const LS_KEY = 'task-board.v2';
+    const LS_KEY_LEGACY = 'task-board.v1';
     const EMPTY_DATE = '';
+    const ALL_PROJECTS = 'all';
+    const DEFAULT_PROJECT_NAME = 'デフォルト';
+    const PROJECT_COLORS = ['blue', 'green', 'purple', 'orange', 'red', 'teal', 'pink', 'gray'];
 
     const COLUMNS = [
       { id: 'todo', label: '未着手' },
@@ -707,7 +1044,22 @@
       board: $('#board'),
       quickInput: $('#quickInput'),
       quickStatus: $('#quickStatus'),
+      quickProject: $('#quickProject'),
       quickAddBtn: $('#quickAddBtn'),
+      projectTabs: $('#projectTabs'),
+      projectSort: $('#projectSort'),
+      hideEmptyProjects: $('#hideEmptyProjects'),
+      expandAllBtn: $('#expandAllBtn'),
+      collapseAllBtn: $('#collapseAllBtn'),
+      manageProjectsBtn: $('#manageProjectsBtn'),
+      lanes: $('#lanes'),
+      projectModalBackdrop: $('#projectModalBackdrop'),
+      closeProjectModalBtn: $('#closeProjectModalBtn'),
+      closeProjectModalOkBtn: $('#closeProjectModalOkBtn'),
+      projectList: $('#projectList'),
+      newProjectInput: $('#newProjectInput'),
+      newProjectColor: $('#newProjectColor'),
+      addProjectBtn: $('#addProjectBtn'),
       newBtn: $('#newBtn'),
       exportBtn: $('#exportBtn'),
       importBtn: $('#importBtn'),
@@ -721,11 +1073,17 @@
       taskForm: $('#taskForm'),
       modalStatus: $('#modalStatus'),
       modalPriority: $('#modalPriority'),
+      modalProject: $('#modalProject'),
       deleteTaskBtn: $('#deleteTaskBtn')
     };
 
     const state = {
       tasks: [],
+      projects: [],
+      activeProjectId: ALL_PROJECTS,
+      collapsedProjects: [],
+      hideEmptyProjects: false,
+      projectSort: 'manual',
       filters: {
         search: '',
         status: 'all',
@@ -806,6 +1164,7 @@
         assignee: String(input.assignee ?? '').replace(/^@/, '').trim(),
         due: normalizeDateString(input.due),
         category: String(input.category ?? '').replace(/^#/, '').trim(),
+        project: String(input.project ?? '').trim(),
         tags: normalizeTags(input.tags),
         createdAt,
         updatedAt
@@ -819,11 +1178,97 @@
       return EMPTY_DATE;
     }
 
-    function seedTasks() {
+    function normalizeColor(value) {
+      const s = String(value ?? '').trim().toLowerCase();
+      return PROJECT_COLORS.includes(s) ? s : 'blue';
+    }
+
+    function normalizeProject(input) {
+      if (!input || typeof input !== 'object') return null;
+      const name = String(input.name ?? '').trim();
+      if (!name) return null;
+      const createdAt = String(input.createdAt ?? new Date().toISOString());
+      return {
+        id: String(input.id ?? uid()),
+        name,
+        color: normalizeColor(input.color),
+        createdAt
+      };
+    }
+
+    function projectById(id) {
+      return state.projects.find((p) => p.id === id) || null;
+    }
+
+    function defaultProject() {
+      return state.projects[0] || null;
+    }
+
+    function activeProjectIdOrNull() {
+      return state.activeProjectId === ALL_PROJECTS ? null : state.activeProjectId;
+    }
+
+    function isProjectCollapsed(id) {
+      return state.collapsedProjects.includes(id);
+    }
+
+    function toggleProjectCollapsed(id, force) {
+      const collapsed = isProjectCollapsed(id);
+      const shouldCollapse = force === undefined ? !collapsed : Boolean(force);
+      if (shouldCollapse) {
+        if (!collapsed) state.collapsedProjects.push(id);
+      } else if (collapsed) {
+        state.collapsedProjects = state.collapsedProjects.filter((x) => x !== id);
+      }
+      saveTasks();
+      render();
+    }
+
+    function tasksInProject(id) {
+      return state.tasks.filter((t) => t.project === id);
+    }
+
+    function orderedProjects() {
+      const list = [...state.projects];
+      const sort = state.projectSort;
+      if (sort === 'name') {
+        list.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+      } else if (sort === 'count-desc') {
+        list.sort((a, b) => tasksInProject(b.id).length - tasksInProject(a.id).length || a.name.localeCompare(b.name, 'ja'));
+      }
+      return list;
+    }
+
+    function ensureProjects() {
+      if (!state.projects.length) {
+        const seed = normalizeProject({ name: DEFAULT_PROJECT_NAME, color: 'blue' });
+        if (seed) state.projects.push(seed);
+      }
+      const validIds = new Set(state.projects.map((p) => p.id));
+      const fallback = state.projects[0]?.id;
+      for (const task of state.tasks) {
+        if (!validIds.has(task.project)) {
+          task.project = fallback;
+        }
+      }
+      if (state.activeProjectId !== ALL_PROJECTS && !validIds.has(state.activeProjectId)) {
+        state.activeProjectId = ALL_PROJECTS;
+      }
+      state.collapsedProjects = state.collapsedProjects.filter((id) => validIds.has(id));
+    }
+
+    function nextColor() {
+      const used = new Set(state.projects.map((p) => p.color));
+      return PROJECT_COLORS.find((c) => !used.has(c)) || PROJECT_COLORS[state.projects.length % PROJECT_COLORS.length];
+    }
+
+    function seedTasks(projectId) {
       const base = new Date().toISOString();
+      const pid = projectId ?? state.projects[0]?.id ?? '';
       return [
         {
           id: uid(),
+          project: pid,
           title: 'Task Board を使う',
           description: 'ドラッグ＆ドロップ、検索、締切、優先度、ローカル保存を確かめます。',
           status: 'todo',
@@ -837,6 +1282,7 @@
         },
         {
           id: uid(),
+          project: pid,
           title: 'ログインUIを整える',
           description: 'エラー表示とバリデーションを分かりやすくする。',
           status: 'doing',
@@ -850,6 +1296,7 @@
         },
         {
           id: uid(),
+          project: pid,
           title: '締切タスクを直す',
           description: '過ぎた締切は赤字で強調表示されます。',
           status: 'doing',
@@ -863,6 +1310,7 @@
         },
         {
           id: uid(),
+          project: pid,
           title: 'レビューコメントを確認する',
           description: 'レビュー待ちタスクはカード下部に表示します。',
           status: 'review',
@@ -876,6 +1324,7 @@
         },
         {
           id: uid(),
+          project: pid,
           title: '公開用の資料を読みやすくする',
           description: 'このサンプルタスクは完了欄に表示されます。',
           status: 'done',
@@ -892,25 +1341,91 @@
 
     function loadTasks() {
       try {
-        const raw = localStorage.getItem(LS_KEY);
-        if (!raw) return seedTasks();
+        const raw = localStorage.getItem(LS_KEY) ?? localStorage.getItem(LS_KEY_LEGACY);
+        if (!raw) {
+          seedSampleData();
+          return state.tasks;
+        }
         const parsed = JSON.parse(raw);
-        const tasks = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.tasks) ? parsed.tasks : null;
-        if (!tasks) return seedTasks();
-        const normalized = tasks.map(normalizeTask).filter(Boolean);
-        return normalized.length ? normalized : seedTasks();
-      } catch {
-        return seedTasks();
+        const tasksRaw = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.tasks) ? parsed.tasks : null;
+        if (!tasksRaw) {
+          seedSampleData();
+          return state.tasks;
+        }
+
+        state.tasks = tasksRaw.map(normalizeTask).filter(Boolean);
+
+        if (!Array.isArray(parsed?.projects) || !parsed.projects.length) {
+          // 旧データ（v1、プロジェクト概念なし）からの移行
+          const created = new Date().toISOString();
+          state.projects = [{ id: uid(), name: DEFAULT_PROJECT_NAME, color: 'blue', createdAt: created }];
+        } else {
+          state.projects = parsed.projects.map(normalizeProject).filter(Boolean);
+        }
+
+        state.projectSort = ['manual', 'name', 'count-desc'].includes(parsed?.projectSort)
+          ? parsed.projectSort
+          : 'manual';
+        state.hideEmptyProjects = Boolean(parsed?.hideEmptyProjects);
+        state.collapsedProjects = Array.isArray(parsed?.collapsedProjects)
+          ? parsed.collapsedProjects.map(String)
+          : [];
+        const apid = String(parsed?.activeProjectId ?? ALL_PROJECTS);
+        state.activeProjectId = apid || ALL_PROJECTS;
+
+        ensureProjects();
+        saveTasks();
+        return state.tasks;
+      } catch (error) {
+        console.error('load failed', error);
+        seedSampleData();
+        return state.tasks;
       }
+    }
+
+    function seedSampleData() {
+      state.projects = [
+        normalizeProject({ name: DEFAULT_PROJECT_NAME, color: 'blue' }),
+        normalizeProject({ name: 'Webアプリ', color: 'green' })
+      ].filter(Boolean);
+      state.tasks = seedTasks(state.projects[0]?.id);
+      ensureProjects();
     }
 
     function saveTasks() {
       try {
-        localStorage.setItem(LS_KEY, JSON.stringify(state.tasks, null, 2));
+        localStorage.setItem(LS_KEY, JSON.stringify({
+          version: 2,
+          projects: state.projects,
+          tasks: state.tasks,
+          activeProjectId: state.activeProjectId,
+          collapsedProjects: state.collapsedProjects,
+          hideEmptyProjects: state.hideEmptyProjects,
+          projectSort: state.projectSort
+        }, null, 2));
       } catch (error) {
         console.error('保存に失敗しました', error);
         alert('ローカル保存に失敗しました。JSON出力でバックアップしてください。');
       }
+    }
+
+    function normalizeProjectRef(value) {
+      const raw = String(value ?? '').trim();
+      if (!raw) return null;
+      const target = raw.toLowerCase();
+      return orderedProjects().find((p) => p.name.toLowerCase() === target) || null;
+    }
+
+    function resolveProjectRef(value) {
+      const found = normalizeProjectRef(value);
+      if (found) return found.id;
+      const name = String(value ?? '').trim();
+      if (!name) return state.projects[0]?.id ?? '';
+      const created = normalizeProject({ name, color: nextColor() });
+      if (!created) return state.projects[0]?.id ?? '';
+      state.projects.push(created);
+      saveTasks();
+      return created.id;
     }
 
     function parseQuickText(text, defaultStatus) {
@@ -920,10 +1435,17 @@
       let assignee = '';
       let priority = 'medium';
       let due = EMPTY_DATE;
+      let projectName = '';
       const tags = [];
       const titleParts = [];
 
       for (const part of raw.split(/\s+/)) {
+        const projMatch = part.match(/^(?:proj|project|p)[:：](.+)$/i) || part.match(/^#project[:：](.+)$/i);
+        if (projMatch) {
+          projectName = projMatch[1].replace(/[,;。]+$/, '');
+          continue;
+        }
+
         if (part.startsWith('#')) {
           const tag = part.slice(1).trim();
           if (tag) tags.push(tag);
@@ -952,12 +1474,17 @@
         titleParts.push(part);
       }
 
+      const projectId = projectName
+        ? resolveProjectRef(projectName)
+        : quickProjectSelection();
+
       return normalizeTask({
         title: titleParts.join(' ').trim() || '無題タスク',
         status: COLUMN_MAP[defaultStatus] ? defaultStatus : 'todo',
         priority,
         assignee,
         due,
+        project: projectId,
         tags
       });
     }
@@ -998,9 +1525,11 @@
 
     function filteredTasks() {
       const q = state.filters.search.trim().toLowerCase();
+      const activeProject = activeProjectIdOrNull();
 
       return state.tasks
         .filter((task) => {
+          if (activeProject && task.project !== activeProject) return false;
           if (state.filters.status !== 'all' && task.status !== state.filters.status) return false;
           if (state.filters.priority !== 'all' && task.priority !== state.filters.priority) return false;
           if (state.filters.category !== 'all' && task.category !== state.filters.category) return false;
@@ -1024,11 +1553,14 @@
     }
 
     function renderStats() {
-      const total = state.tasks.length;
-      const done = state.tasks.filter((t) => t.status === 'done').length;
-      const doing = state.tasks.filter((t) => t.status === 'doing').length;
-      const review = state.tasks.filter((t) => t.status === 'review').length;
-      const overdue = state.tasks.filter(isOverdue).length;
+      const scoped = activeProjectIdOrNull()
+        ? state.tasks.filter((t) => t.project === state.activeProjectId)
+        : state.tasks;
+      const total = scoped.length;
+      const done = scoped.filter((t) => t.status === 'done').length;
+      const doing = scoped.filter((t) => t.status === 'doing').length;
+      const review = scoped.filter((t) => t.status === 'review').length;
+      const overdue = scoped.filter(isOverdue).length;
       const percent = total ? Math.round((done / total) * 100) : 0;
 
       refs.stats.innerHTML = [
@@ -1036,7 +1568,8 @@
         statCard('完了', `${done} (${percent}%)`),
         statCard('対応中', doing),
         statCard('レビュー待ち', review),
-        statCard('締切過', overdue)
+        statCard('締切過', overdue),
+        statCard('プロジェクト', state.projects.length)
       ].join('');
     }
 
@@ -1057,6 +1590,14 @@
       refs.quickStatus.value = 'todo';
     }
 
+    function populateProjectSelect(selectedId) {
+      const options = orderedProjects().map((p) => {
+        const active = p.id === selectedId ? ' selected' : '';
+        return `<option value="${escapeHtml(p.id)}"${active}>${escapeHtml(p.name)}</option>`;
+      }).join('');
+      refs.modalProject.innerHTML = options || '<option value="">(プロジェクトなし)</option>';
+    }
+
     function renderCategoryFilter() {
       const categories = [...new Set(state.tasks.map((t) => t.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ja'));
       const selected = state.filters.category;
@@ -1069,11 +1610,15 @@
         categories.map((c) => `<option value="${escapeHtml(c)}" ${state.filters.category === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('');
     }
 
-    function renderCard(task) {
+    function renderCard(task, options = {}) {
       const column = COLUMN_MAP[task.status] || COLUMNS[0];
       const priority = PRIORITY_MAP[task.priority] || PRIORITY_MAP.medium;
       const overdueClass = isOverdue(task) ? ' overdue' : '';
       const tagHtml = task.tags.map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('');
+      const project = projectById(task.project);
+      const projectChip = options.showProject && project
+        ? `<span class="lane-tag"><span class="dot dot-${escapeHtml(project.color)}"></span>${escapeHtml(project.name)}</span>`
+        : '';
 
       return `
         <article class="card priority-${task.priority}" draggable="true" data-id="${escapeHtml(task.id)}">
@@ -1088,6 +1633,7 @@
           <h3>${escapeHtml(task.title)}</h3>
           ${task.description ? `<p>${escapeHtml(task.description)}</p>` : ''}
           <div class="meta">
+            ${projectChip}
             ${task.due ? `<span class="${overdueClass.trim()}">締切 ${escapeHtml(task.due)}</span>` : ''}
             ${task.assignee ? `<span>@${escapeHtml(task.assignee)}</span>` : ''}
             ${task.category ? `<span>#${escapeHtml(task.category)}</span>` : ''}
@@ -1102,13 +1648,15 @@
       `;
     }
 
-    function renderBoard() {
-      const filtered = filteredTasks();
+    function renderColumnsHtml(tasks, options = {}) {
       const visibleColumns = state.filters.status === 'all' ? COLUMNS : COLUMNS.filter((c) => c.id === state.filters.status);
+      const prefix = options.projectId ? `${options.projectId}::` : '';
 
-      refs.board.innerHTML = visibleColumns.map((column) => {
-        const items = filtered.filter((task) => task.status === column.id);
-        const cards = items.length ? items.map(renderCard).join('') : '<div class="empty">タスクなし</div>';
+      return visibleColumns.map((column) => {
+        const items = tasks.filter((task) => task.status === column.id);
+        const cards = items.length
+          ? items.map((t) => renderCard(t, options)).join('')
+          : '<div class="empty">タスクなし</div>';
 
         return `
           <section class="column">
@@ -1116,7 +1664,7 @@
               <h2>${escapeHtml(column.label)}</h2>
               <span class="count">${items.length}</span>
             </div>
-            <div class="dropzone" data-status="${column.id}">
+            <div class="dropzone" data-status="${column.id}"${options.projectId ? ` data-project="${escapeHtml(options.projectId)}"` : ''}>
               ${cards}
             </div>
           </section>
@@ -1124,7 +1672,127 @@
       }).join('');
     }
 
+    function renderProjectTabs() {
+      const all = state.tasks.length;
+      const chips = [];
+
+      chips.push(`
+        <button type="button" class="project-chip${state.activeProjectId === ALL_PROJECTS ? ' active' : ''}" data-project-action="select" data-project-id="${ALL_PROJECTS}" title="全プロジェクトのスタックビュー">
+          全プロジェクト
+          <span class="count">${all}</span>
+        </button>
+      `);
+
+      for (const project of orderedProjects()) {
+        const count = tasksInProject(project.id).length;
+        chips.push(`
+          <button type="button" class="project-chip${state.activeProjectId === project.id ? ' active' : ''}" data-project-action="select" data-project-id="${escapeHtml(project.id)}" title="${escapeHtml(project.name)}">
+            <span class="dot dot-${escapeHtml(project.color)}"></span>
+            ${escapeHtml(project.name)}
+            <span class="count">${count}</span>
+          </button>
+        `);
+      }
+
+      chips.push('<button type="button" class="project-chip" data-project-action="add" title="新しいプロジェクトを追加">＋ プロジェクト</button>');
+
+      refs.projectTabs.innerHTML = chips.join('');
+      refs.projectSort.value = state.projectSort;
+      refs.hideEmptyProjects.checked = state.hideEmptyProjects;
+    }
+
+    function renderAllProjectsLanes(filtered) {
+      let list = orderedProjects();
+      if (state.hideEmptyProjects) {
+        list = list.filter((p) => tasksInProject(p.id).length > 0);
+      }
+
+      if (!list.length) {
+        refs.lanes.innerHTML = '<div class="empty">表示できるプロジェクトがありません。空プロジェクトを隠すを解除するか、新規プロジェクトを追加してください。</div>';
+        return;
+      }
+
+      refs.lanes.innerHTML = list.map((project) => {
+        const tasks = filtered.filter((t) => t.project === project.id);
+        const allInProject = tasksInProject(project.id);
+        const doneCount = allInProject.filter((t) => t.status === 'done').length;
+        const doingCount = allInProject.filter((t) => t.status === 'doing').length;
+        const overdueCount = allInProject.filter(isOverdue).length;
+        const collapsed = isProjectCollapsed(project.id);
+        const body = collapsed
+          ? ''
+          : `<div class="lane-body" data-lane="${escapeHtml(project.id)}">${renderColumnsHtml(tasks, { projectId: project.id, showProject: false })}</div>`;
+
+        const emptyHint = !collapsed && !allInProject.length
+          ? `<div class="lane-empty">このプロジェクトにはまだタスクがありません。クイック追加から <code>proj:${escapeHtml(project.name)}</code> で追加できます。</div>`
+          : '';
+
+        return `
+          <section class="lane${collapsed ? ' collapsed' : ''}" data-project-id="${escapeHtml(project.id)}">
+            <header class="lane-head">
+              <button type="button" class="collapse-btn" data-project-action="collapse" data-project-id="${escapeHtml(project.id)}" title="展開/折りたたむ">${collapsed ? '▶' : '▼'}</button>
+              <span class="dot dot-${escapeHtml(project.color)}"></span>
+              <h3>${escapeHtml(project.name)}</h3>
+              <span class="count">${allInProject.length}</span>
+              <div class="lane-mini-stats">
+                <span>完了 <strong>${doneCount}</strong></span>
+                <span>対応中 <strong>${doingCount}</strong></span>
+                <span>締切過 <strong style="${overdueCount ? 'color:var(--bad)' : ''}">${overdueCount}</strong></span>
+              </div>
+              <div class="lane-actions">
+                <button type="button" class="mini" data-project-action="add-task" data-project-id="${escapeHtml(project.id)}" title="このプロジェクトに追加">＋</button>
+                <button type="button" class="mini" data-project-action="edit" data-project-id="${escapeHtml(project.id)}" title="プロジェクト情報編集">✎</button>
+                <button type="button" class="mini" data-project-action="select" data-project-id="${escapeHtml(project.id)}" title="このプロジェクト専用に切替">▶</button>
+              </div>
+            </header>
+            ${body}
+            ${emptyHint}
+          </section>
+        `;
+      }).join('');
+    }
+
+    function renderBoard() {
+      const filtered = filteredTasks();
+
+      if (state.activeProjectId === ALL_PROJECTS) {
+        refs.board.hidden = true;
+        refs.lanes.hidden = false;
+        renderAllProjectsLanes(filtered);
+        return;
+      }
+
+      const project = projectById(state.activeProjectId);
+      if (!project) {
+        state.activeProjectId = ALL_PROJECTS;
+        return renderBoard();
+      }
+
+      refs.lanes.hidden = true;
+      refs.board.hidden = false;
+      const tasks = filtered.filter((t) => t.project === project.id);
+      refs.board.innerHTML = renderColumnsHtml(tasks, { projectId: project.id, showProject: false });
+    }
+
+    function quickProjectSelection() {
+      const chosen = refs.quickProject?.value;
+      if (chosen && projectById(chosen)) return chosen;
+      if (state.activeProjectId !== ALL_PROJECTS && projectById(state.activeProjectId)) return state.activeProjectId;
+      return state.projects[0]?.id ?? '';
+    }
+
+    function populateQuickProject() {
+      const options = orderedProjects().map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join('');
+      const previous = refs.quickProject.value;
+      refs.quickProject.innerHTML = options;
+      const active = projectById(state.activeProjectId);
+      const candidate = active ? active.id : (projectById(previous) ? previous : state.projects[0]?.id);
+      if (candidate) refs.quickProject.value = candidate;
+    }
+
     function render() {
+      populateQuickProject();
+      renderProjectTabs();
       renderStats();
       renderCategoryFilter();
       renderBoard();
@@ -1177,13 +1845,19 @@
       });
     }
 
-    function openModal(id = null) {
+    function openModal(id = null, presetProjectId = null) {
       state.editingId = id;
       refs.taskForm.reset();
 
       const task = id ? state.tasks.find((t) => t.id === id) : null;
       refs.modalTitle.textContent = task ? 'タスクを編集' : 'タスクを追加';
       refs.deleteTaskBtn.hidden = !task;
+
+      const defaultProjectId = task?.project
+        ?? presetProjectId
+        ?? (state.activeProjectId !== ALL_PROJECTS ? state.activeProjectId : state.projects[0]?.id);
+
+      populateProjectSelect(defaultProjectId);
 
       refs.modalStatus.value = task?.status || refs.quickStatus.value || 'todo';
       refs.modalPriority.value = task?.priority || 'medium';
@@ -1217,6 +1891,8 @@
         return;
       }
 
+      const projectId = String(e.project?.value ?? '').trim() || state.projects[0]?.id || '';
+
       const data = {
         title,
         description: String(e.description.value ?? '').trim(),
@@ -1225,6 +1901,7 @@
         due: String(e.due.value ?? '').trim(),
         assignee: String(e.assignee.value ?? '').trim(),
         category: String(e.category.value ?? '').trim(),
+        project: projectId,
         tags: String(e.tags.value ?? '').trim()
       };
 
@@ -1242,7 +1919,13 @@
     }
 
     function exportJson() {
-      const blob = new Blob([JSON.stringify(state.tasks, null, 2)], { type: 'application/json' });
+      const payload = {
+        version: 2,
+        projects: state.projects,
+        tasks: state.tasks,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -1260,16 +1943,27 @@
       reader.onload = () => {
         try {
           const parsed = JSON.parse(String(reader.result ?? ''));
-          const tasks = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.tasks) ? parsed.tasks : null;
-          if (!tasks) throw new Error('tasks array not found');
+          const tasksRaw = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.tasks) ? parsed.tasks : null;
+          if (!tasksRaw) throw new Error('tasks array not found');
 
-          const normalized = tasks.map(normalizeTask).filter(Boolean);
-          if (!normalized.length) throw new Error('no valid tasks');
+          const normalizedTasks = tasksRaw.map(normalizeTask).filter(Boolean);
+          if (!normalizedTasks.length) throw new Error('no valid tasks');
 
-          state.tasks = normalized;
+          const normalizedProjects = Array.isArray(parsed?.projects)
+            ? parsed.projects.map(normalizeProject).filter(Boolean)
+            : [];
+
+          if (normalizedProjects.length) {
+            state.projects = normalizedProjects;
+          }
+
+          state.tasks = normalizedTasks;
+          state.collapsedProjects = [];
+          state.activeProjectId = ALL_PROJECTS;
+          ensureProjects();
           saveTasks();
           render();
-          alert(`${normalized.length}件のタスクを読み込みました。`);
+          alert(`${normalizedTasks.length}件のタスク、${state.projects.length}件のプロジェクトを読み込みました。`);
         } catch (error) {
           console.error('import failed', error);
           alert('JSONの読み込みに失敗しました。形式を確認してください。');
@@ -1285,17 +1979,130 @@
     }
 
     function restoreSample() {
-      if (!confirm('現在のタスクをサンプルに戻します。よろしいですか？')) return;
-      state.tasks = seedTasks();
+      if (!confirm('現在のタスクとプロジェクトをサンプルに戻します。よろしいですか？')) return;
+      seedSampleData();
+      state.activeProjectId = ALL_PROJECTS;
+      state.collapsedProjects = [];
       saveTasks();
       render();
     }
 
     function clearAll() {
-      if (!confirm('全タスクを削除します。よろしいですか？')) return;
+      if (!confirm('全タスクとプロジェクトを削除します。よろしいですか？')) return;
       state.tasks = [];
+      state.projects = [];
+      state.collapsedProjects = [];
+      state.activeProjectId = ALL_PROJECTS;
+      ensureProjects();
       saveTasks();
       render();
+    }
+
+    function addProject(name, color) {
+      const trimmed = String(name ?? '').trim();
+      if (!trimmed) return null;
+      if (state.projects.some((p) => p.name.toLowerCase() === trimmed.toLowerCase())) {
+        alert('同じ名前のプロジェクトが既にあります。');
+        return null;
+      }
+      const created = normalizeProject({ name: trimmed, color: color || nextColor() });
+      if (!created) return null;
+      state.projects.push(created);
+      saveTasks();
+      render();
+      return created;
+    }
+
+    function renameProject(id, name) {
+      const project = projectById(id);
+      if (!project) return;
+      const trimmed = String(name ?? '').trim();
+      if (!trimmed || trimmed === project.name) return;
+      if (state.projects.some((p) => p.id !== id && p.name.toLowerCase() === trimmed.toLowerCase())) {
+        alert('同じ名前のプロジェクトが既にあります。');
+        renderProjectManager();
+        return;
+      }
+      project.name = trimmed;
+      saveTasks();
+      render();
+    }
+
+    function moveProject(id, delta) {
+      const idx = state.projects.findIndex((p) => p.id === id);
+      if (idx < 0) return;
+      const to = Math.max(0, Math.min(state.projects.length - 1, idx + delta));
+      if (to === idx) return;
+      const [item] = state.projects.splice(idx, 1);
+      state.projects.splice(to, 0, item);
+      state.projectSort = 'manual';
+      saveTasks();
+      render();
+      renderProjectManager();
+    }
+
+    function removeProject(id) {
+      const project = projectById(id);
+      if (!project) return;
+      if (state.projects.length <= 1) {
+        alert('最後のプロジェクトは削除できません。');
+        return;
+      }
+
+      const count = tasksInProject(id).length;
+      const fallback = state.projects.find((p) => p.id !== id);
+      if (!fallback) return;
+      if (!confirm(`「${project.name}」を削除します。${count ? `\n${count}件のタスクは「${fallback.name}」へ移動します。` : ''}`)) return;
+
+      for (const t of state.tasks) {
+        if (t.project === id) t.project = fallback.id;
+      }
+
+      state.projects = state.projects.filter((p) => p.id !== id);
+      state.collapsedProjects = state.collapsedProjects.filter((x) => x !== id);
+      if (state.activeProjectId === id) state.activeProjectId = ALL_PROJECTS;
+      ensureProjects();
+      saveTasks();
+      render();
+      renderProjectManager();
+    }
+
+    function renderProjectManager() {
+      if (refs.projectModalBackdrop.hidden) return;
+
+      refs.projectList.innerHTML = orderedProjects().map((project) => {
+        const count = tasksInProject(project.id).length;
+        const colorOptions = PROJECT_COLORS.map((c) => `<option value="${c}" ${project.color === c ? 'selected' : ''}>${c}</option>`).join('');
+        const isActive = state.activeProjectId === project.id;
+        return `
+          <div class="project-row${isActive ? ' is-active' : ''}" data-project-id="${escapeHtml(project.id)}">
+            <span class="dot dot-${escapeHtml(project.color)}"></span>
+            <input type="text" value="${escapeHtml(project.name)}" aria-label="プロジェクト名">
+            <select aria-label="プロジェクト色" title="色">${colorOptions}</select>
+            <span class="count">${count}</span>
+            <button type="button" class="mini" data-admin="up" data-project-id="${escapeHtml(project.id)}" title="上へ">▲</button>
+            <button type="button" class="mini" data-admin="down" data-project-id="${escapeHtml(project.id)}" title="下へ">▼</button>
+            <button type="button" class="mini" data-admin="delete" data-project-id="${escapeHtml(project.id)}" title="削除">×</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openProjectModal(focusId = null) {
+      refs.projectModalBackdrop.hidden = false;
+      renderProjectManager();
+      if (focusId) {
+        const row = refs.projectList.querySelector(`.project-row[data-project-id="${CSS.escape(focusId)}"]`);
+        const input = row?.querySelector('input[type="text"]');
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }
+    }
+
+    function closeProjectModal() {
+      refs.projectModalBackdrop.hidden = true;
     }
 
     function attachListeners() {
@@ -1363,89 +2170,229 @@
         if (event.key === 'Escape' && !refs.modalBackdrop.hidden) closeModal();
       });
 
-      refs.board.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-action]');
-        if (!button) return;
+      function bindBoardEvents(root) {
+        root.addEventListener('click', (event) => {
+          const button = event.target.closest('[data-action]');
+          if (!button) return;
 
-        const card = button.closest('.card');
-        if (!card) return;
+          const card = button.closest('.card');
+          if (!card) return;
 
-        const id = card.dataset.id;
-        const action = button.dataset.action;
+          const id = card.dataset.id;
+          const action = button.dataset.action;
 
-        if (action === 'edit') openModal(id);
-        if (action === 'delete') deleteTask(id);
-        if (action === 'toggle-done') toggleDone(id);
-        if (action === 'move-left') moveTask(id, -1);
-        if (action === 'move-right') moveTask(id, 1);
-      });
+          if (action === 'edit') openModal(id);
+          if (action === 'delete') deleteTask(id);
+          if (action === 'toggle-done') toggleDone(id);
+          if (action === 'move-left') moveTask(id, -1);
+          if (action === 'move-right') moveTask(id, 1);
+        });
 
-      refs.board.addEventListener('dblclick', (event) => {
-        const card = event.target.closest('.card');
-        const button = event.target.closest('button');
-        if (card && !button) openModal(card.dataset.id);
-      });
+        root.addEventListener('dblclick', (event) => {
+          const card = event.target.closest('.card');
+          const button = event.target.closest('button');
+          if (card && !button) openModal(card.dataset.id);
+        });
 
-      refs.board.addEventListener('dragstart', (event) => {
-        const card = event.target.closest('.card');
-        if (!card) return;
+        root.addEventListener('dragstart', (event) => {
+          const card = event.target.closest('.card');
+          if (!card) return;
 
-        state.draggedId = card.dataset.id;
-        card.classList.add('dragging');
+          state.draggedId = card.dataset.id;
+          card.classList.add('dragging');
 
-        if (event.dataTransfer) {
-          event.dataTransfer.effectAllowed = 'move';
-          event.dataTransfer.dropEffect = 'move';
-          event.dataTransfer.setData('text/plain', card.dataset.id);
+          if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.dropEffect = 'move';
+            event.dataTransfer.setData('text/plain', card.dataset.id);
+          }
+        });
+
+        root.addEventListener('dragend', (event) => {
+          const card = event.target.closest('.card');
+          if (card) card.classList.remove('dragging');
+          state.draggedId = null;
+        });
+
+        root.addEventListener('dragover', (event) => {
+          const dropzone = event.target.closest('.dropzone');
+          if (!dropzone || !state.draggedId) return;
+
+          event.preventDefault();
+
+          if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.dropEffect = 'move';
+          }
+
+          dropzone.classList.add('drag-over');
+        });
+
+        root.addEventListener('dragleave', (event) => {
+          const dropzone = event.target.closest('.dropzone');
+          if (!dropzone) return;
+
+          const related = event.relatedTarget;
+          if (!related || !dropzone.contains(related)) {
+            dropzone.classList.remove('drag-over');
+          }
+        });
+
+        root.addEventListener('drop', (event) => {
+          const dropzone = event.target.closest('.dropzone');
+          if (!dropzone || !state.draggedId) return;
+
+          event.preventDefault();
+          const status = dropzone.dataset.status;
+          const project = dropzone.dataset.project;
+          const patch = { status };
+          if (project) patch.project = project;
+
+          updateTask(state.draggedId, patch);
+          document.querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
+          state.draggedId = null;
+        });
+      }
+
+      bindBoardEvents(refs.board);
+      bindBoardEvents(refs.lanes);
+
+      refs.projectTabs.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-project-action]');
+        if (!btn) return;
+        const action = btn.dataset.projectAction;
+        const id = btn.dataset.projectId;
+        if (action === 'select' && id) {
+          state.activeProjectId = id;
+          saveTasks();
+          render();
+        } else if (action === 'add') {
+          openProjectModal();
+          setTimeout(() => refs.newProjectInput.focus(), 0);
         }
       });
 
-      refs.board.addEventListener('dragend', (event) => {
-        const card = event.target.closest('.card');
-        if (card) card.classList.remove('dragging');
-        state.draggedId = null;
-      });
+      refs.lanes.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-project-action]');
+        if (!btn) return;
+        const action = btn.dataset.projectAction;
+        const id = btn.dataset.projectId;
+        if (!id) return;
 
-      refs.board.addEventListener('dragover', (event) => {
-        const dropzone = event.target.closest('.dropzone');
-        if (!dropzone || !state.draggedId) return;
-
-        event.preventDefault();
-
-        if (event.dataTransfer) {
-          event.dataTransfer.effectAllowed = 'move';
-          event.dataTransfer.dropEffect = 'move';
-        }
-
-        dropzone.classList.add('drag-over');
-      });
-
-      refs.board.addEventListener('dragleave', (event) => {
-        const dropzone = event.target.closest('.dropzone');
-        if (!dropzone) return;
-
-        const related = event.relatedTarget;
-        if (!related || !dropzone.contains(related)) {
-          dropzone.classList.remove('drag-over');
+        if (action === 'collapse') {
+          toggleProjectCollapsed(id);
+        } else if (action === 'select') {
+          state.activeProjectId = id;
+          saveTasks();
+          render();
+        } else if (action === 'add-task') {
+          openModal(null, id);
+        } else if (action === 'edit') {
+          openProjectModal(id);
         }
       });
 
-      refs.board.addEventListener('drop', (event) => {
-        const dropzone = event.target.closest('.dropzone');
-        if (!dropzone || !state.draggedId) return;
+      refs.projectSort.addEventListener('change', (event) => {
+        state.projectSort = event.target.value;
+        saveTasks();
+        render();
+      });
 
-        event.preventDefault();
-        const status = dropzone.dataset.status;
+      refs.hideEmptyProjects.addEventListener('change', (event) => {
+        state.hideEmptyProjects = event.target.checked;
+        saveTasks();
+        render();
+      });
 
-        updateTask(state.draggedId, { status });
-        document.querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
-        state.draggedId = null;
+      refs.expandAllBtn.addEventListener('click', () => {
+        state.collapsedProjects = [];
+        saveTasks();
+        render();
+      });
+
+      refs.collapseAllBtn.addEventListener('click', () => {
+        state.collapsedProjects = state.projects.map((p) => p.id);
+        saveTasks();
+        render();
+      });
+
+      refs.manageProjectsBtn.addEventListener('click', () => openProjectModal());
+      refs.closeProjectModalBtn.addEventListener('click', closeProjectModal);
+      refs.closeProjectModalOkBtn.addEventListener('click', closeProjectModal);
+      refs.projectModalBackdrop.addEventListener('click', (event) => {
+        if (event.target === refs.projectModalBackdrop) closeProjectModal();
+      });
+
+      refs.projectList.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-admin]');
+        if (!btn) return;
+        const id = btn.dataset.projectId;
+        const admin = btn.dataset.admin;
+        if (admin === 'up') moveProject(id, -1);
+        if (admin === 'down') moveProject(id, 1);
+        if (admin === 'delete') removeProject(id);
+      });
+
+      refs.projectList.addEventListener('input', (event) => {
+        const row = event.target.closest('.project-row');
+        if (!row) return;
+        const id = row.dataset.projectId;
+        const project = projectById(id);
+        if (!project) return;
+        if (event.target.matches('input[type="text"]')) {
+          const label = row.querySelector('.project-name-live');
+          if (label) label.textContent = event.target.value || project.name;
+        }
+      });
+
+      refs.projectList.addEventListener('change', (event) => {
+        const row = event.target.closest('.project-row');
+        if (!row) return;
+        const id = row.dataset.projectId;
+        const project = projectById(id);
+        if (!project) return;
+
+        if (event.target.matches('input[type="text"]')) {
+          renameProject(id, event.target.value);
+        } else if (event.target.matches('select')) {
+          const color = event.target.value;
+          if (PROJECT_COLORS.includes(color)) {
+            project.color = color;
+            saveTasks();
+            render();
+            renderProjectManager();
+          }
+        }
+      });
+
+      refs.addProjectBtn.addEventListener('click', () => {
+        const name = refs.newProjectInput.value.trim();
+        if (!name) {
+          refs.newProjectInput.focus();
+          return;
+        }
+        const created = addProject(name, refs.newProjectColor.value);
+        refs.newProjectInput.value = '';
+        refs.newProjectInput.focus();
+        if (created) renderProjectManager();
+      });
+
+      refs.newProjectInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          refs.addProjectBtn.click();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !refs.projectModalBackdrop.hidden) closeProjectModal();
       });
     }
 
     function init() {
       populateSelects();
-      state.tasks = loadTasks();
+      loadTasks();
+      ensureProjects();
       attachListeners();
       render();
     }

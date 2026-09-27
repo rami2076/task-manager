@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
-  "description": "Single-file board-style task manager with local storage support",
+  "description": "Single-file, multi-project board-style task manager with local storage support",
   "license": "MIT",
   "author": "rami2076",
   "homepage": "https://github.com/rami2076/task-manager#readme",
@@ -23,6 +23,8 @@
     "kanban",
     "todo",
     "local-first",
-    "single-file"
+    "single-file",
+    "multi-project",
+    "swimlane"
   ]
 }
